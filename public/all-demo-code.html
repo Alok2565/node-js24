@@ -1,0 +1,56 @@
+const express = require("express");
+const path = require('path');
+
+const app = express();
+const publicPath = path.join(__dirname,'public');
+
+app.set('view engine','ejs');
+
+app.get('',(req,resp)=>{
+    resp.sendFile(`${publicPath}/index.html`);
+});
+app.get('/profile',(_,resp)=>{
+    const user ={
+        name:'Alok Singh',
+        email:'alok@yahoo.com',
+        country:'India',
+        skills:['PhP','Ajax','JavaScript','c++']
+    }
+    resp.render('profile',{user});
+});
+app.get('/login',(_,resp)=>{
+    resp.render('login');
+})
+app.get('/about-us',(req,resp) => {
+        resp.sendFile(`${publicPath}/about-us.html`);
+    }); 
+app.get('/contact-us',(req,resp) => {
+        resp.sendFile(`${publicPath}/contact-us.html`);
+    });
+app.get('*',(req,resp) => {
+        resp.sendFile(`${publicPath}/404.html`);
+    });      
+app.listen(5000);
+
+//New 
+const express = require("express");
+const reqFilter = require('./middleware');
+const app = express();  
+const route = express.Router();
+route.use(reqFilter);
+
+app.get('/',(req,resp)=>{
+    resp.send("welcome to middleware");
+});
+app.get('/users',(req,resp)=>{
+    resp.send("welcome to users page");
+});
+route.get('/about-us',(req,resp)=>{
+    resp.send("welcome to About us page");
+});
+route.get('/contact-us',(req,resp)=>{
+    resp.send("welcome to Contact page");
+});
+app.use('/',route);
+
+app.listen(5000);
